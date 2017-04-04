@@ -1,4 +1,4 @@
-\section{\texttt{curry verify}: A Tool to Support the Verification of Curry Programs}
+\section{CurryVerify: A Tool to Support the Verification of Curry Programs}
 \label{sec-curry2verify}
 
 CurryVerify\index{CurryVerify}\index{verifying programs}\index{program!verification}
@@ -29,14 +29,31 @@ However, these limitations might be relaxed in future releases.
 Hence, the current tool should be considered as a first prototypical
 approach to support the verification of Curry programs.
 
+\subsection{Installation}
+
+The current implementation of CurryVerify is a package
+managed by the Curry Package Manager CPM
+(see also Section~\ref{sec-cpm}).
+Thus, to install the newest version of CurryVerify, use the following commands:
+%
+\begin{curry}
+> cpm update
+> cpm installbin verify
+\end{curry}
+%
+This downloads the newest package, compiles it, and places
+the executable \code{curry-verify} into the directory \code{\$HOME/.cpm/bin}.
+Hence it is recommended to add this directory to your path
+in order to execute CurryVerify as described below.
+
 \subsection{Basic Usage}
 
 To translate the properties of a Curry program stored
 in the file \code{prog.curry} into Agda,
-one can invoke the command\pindex{curry verify}\pindex{verify}
+one can invoke the command\pindex{curry-verify}\pindex{verify}
 %
 \begin{curry}
-curry verify prog
+curry-verify prog
 \end{curry}
 %
 This generates for each property $p$ in module \code{prog}
@@ -83,7 +100,7 @@ In order to prove the correctness of this property,
 we translate it into an Agda program by executing
 %
 \begin{curry}
-> curry verify Double
+> curry-verify Double
 $\ldots$
 Agda module 'TO-PROVE-evendoublecoin.agda' written.
 If you completed the proof, rename it to 'PROOF-evendoublecoin.agda'.
@@ -174,11 +191,11 @@ can be used by further invocations of CurryCheck.
 
 \subsection{Options}
 
-The command \code{curry verify} can be parameterized
+The command \code{curry-verify} can be parameterized
 with various options.
 The available options can also be shown by executing
 \begin{curry}
-curry verify --help
+curry-verify --help
 \end{curry}
 The options are briefly described in the following.
 
