@@ -10,6 +10,10 @@
         "currycheck"   : ">= 1.0.0",
         "rewriting"    : ">= 0.0.1"
     },
+    "compilerCompatibility": {
+        "pakcs": ">= 1.10.0, < 2.0.0",
+        "kics2": ">= 0.5.0, < 2.0.0"
+    },
     "exportedModules": [ "ToVerifier", "VerifyOptions", "ToAgda" ],
     "configModule": "VerifyPackageConfig",
     "executable": {
