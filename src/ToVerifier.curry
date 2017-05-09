@@ -2,7 +2,7 @@
 --- A transformation of Curry programs into verification tools.
 ---
 --- @author Michael Hanus
---- @version Augsut 2016
+--- @version October 2016
 -------------------------------------------------------------------------
 
 module ToVerifier where
@@ -36,7 +36,7 @@ cvBanner :: String
 cvBanner = unlines [bannerLine,bannerText,bannerLine]
  where
    bannerText = "curry-verify: Curry programs -> Verifiers (Version " ++
-                packageVersion ++ " of 16/08/2016)"
+                packageVersion ++ " of 08/05/2017)"
    bannerLine = take (length bannerText) (repeat '-')
 
 -- Help text
@@ -85,7 +85,8 @@ generateTheorem :: Options -> QName -> IO ()
 generateTheorem opts qpropname = do
   (newopts, allprogs, allfuncs) <- getAllFunctions opts [] [] [qpropname]
   let alltypenames = foldr union []
-                           (map (\fd -> tconsOfType (funcType fd)) allfuncs)
+                       (map (\fd -> tconsOfType (typeOfQualType (funcType fd)))
+                            allfuncs)
   alltypes <- getAllTypeDecls opts allprogs alltypenames []
   when (optVerb opts > 2) $ do
     putStrLn $ "Theorem `" ++ snd qpropname ++ "':\nInvolved operations:"
@@ -126,9 +127,9 @@ sortTypeDecls :: [CTypeDecl] -> [CTypeDecl]
 sortTypeDecls tdecls = concat (scc definedBy usedIn tdecls)
  where
   definedBy tdecl = [typeName tdecl]
-  usedIn (CType    _ _ _ cdecls) = nub (concatMap typesOfConsDecl cdecls)
-  usedIn (CTypeSyn _ _ _ texp)   = nub (typesOfTypeExpr texp)
-  usedIn (CNewType _ _ _ cdecl)  = nub (typesOfConsDecl cdecl)
+  usedIn (CType    _ _ _ cdecls _) = nub (concatMap typesOfConsDecl cdecls)
+  usedIn (CTypeSyn _ _ _ texp)     = nub (typesOfTypeExpr texp)
+  usedIn (CNewType _ _ _ cdecl _)  = nub (typesOfConsDecl cdecl)
 
 -------------------------------------------------------------------------
 

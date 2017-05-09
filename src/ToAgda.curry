@@ -2,7 +2,7 @@
 --- A transformation of Curry programs into Agda programs.
 ---
 --- @author Michael Hanus
---- @version August 2016
+--- @version October 2016
 -------------------------------------------------------------------------
 
 module ToAgda(theoremToAgda) where
@@ -91,12 +91,12 @@ funcDeclsToTypedRules fdecls = (rename, typedrules)
   rename      = rename4agda (allNamesOfTRS allrules)
 
 -- All function names occurring in a TRS.
-allNamesOfTRS :: TRS a -> [a]
+allNamesOfTRS :: Eq a => TRS a -> [a]
 allNamesOfTRS =
   foldr union [] . map allNamesOfTerm . concatMap (\ (lhs,rhs) -> [lhs,rhs])
 
 -- All function names occurring in a term.
-allNamesOfTerm :: Term a -> [a]
+allNamesOfTerm :: Eq a => Term a -> [a]
 allNamesOfTerm (TermVar _) = []
 allNamesOfTerm (TermCons f ts) = foldr union [f] (map allNamesOfTerm ts)
 
@@ -127,7 +127,7 @@ funcDeclToTypedRule (CFunc qn ar vis texp rules) =
   funcDeclToTypedRule (CmtFunc "" qn ar vis texp rules) 
 funcDeclToTypedRule fdecl@(CmtFunc _ _ _ _ texp _) =
   let (fn, trs) = fromFuncDecl fdecl
-   in (fn, [], texp, trs)
+   in (fn, [], typeOfQualType texp, trs)
 
 -------------------------------------------------------------------------
 -- Eliminate overlapping rules by introducing a new operation
@@ -300,7 +300,7 @@ transformRuleWithNondet opts (fn,cmt,texp,trs)
 
   addNDToResultType te = case te of
     CFuncType t1 t2 -> CFuncType t1 (addNDToResultType t2)
-    _ -> CTCons (pre "ND") [te]
+    _               -> applyTC (pre "ND") [te]
 
   addNondet rl@(lhs,rhs)
    | isTheoremRule opts rl
@@ -473,18 +473,18 @@ showVarAsAgda v | v >= 0 = if q == 0
 typeDeclAsAgda :: CTypeDecl -> String
 typeDeclAsAgda (CTypeSyn tc _ _ _) =
   error $ "Type synonyms not supported: " ++ showQName tc
-typeDeclAsAgda (CNewType tc vis tvars consdecl) =
-  typeDeclAsAgda (CType tc vis tvars [consdecl])
-typeDeclAsAgda (CType tc _ tvars constrs) = unlines $
+typeDeclAsAgda (CNewType tc vis tvars consdecl dvs) =
+  typeDeclAsAgda (CType tc vis tvars [consdecl] dvs)
+typeDeclAsAgda (CType tc _ tvars constrs _) = unlines $
   (unwords $
      ["data", snd tc] ++
      map (\tv -> "("++ showTypeAsAgda False (CTVar tv) ++ " : Set)") tvars ++
      [": Set where"]) : map typeConsDeclAsAgda constrs
  where
-  typeConsDeclAsAgda (CCons qc _ texps) =
+  typeConsDeclAsAgda (CCons _ _ qc _ texps) =
     "   " ++ snd qc ++ " : " ++
-    showTypeAsAgda False (foldr CFuncType (CTCons tc (map CTVar tvars)) texps)
-  typeConsDeclAsAgda (CRecord qc _ _) =
+    showTypeAsAgda False (foldr CFuncType (applyTC tc (map CTVar tvars)) texps)
+  typeConsDeclAsAgda (CRecord _ _ qc _ _) =
     error $ "Records not yet supported: " ++ showQName qc
 
 -------------------------------------------------------------------------
@@ -504,12 +504,25 @@ showTypeAsAgda withbrackets texp = case texp of
   CFuncType t1 t2 -> inBrackets $ showTypeAsAgda False t1 ++ " \x2192 " ++
                                   showTypeAsAgda False t2
   CTVar (i,_) -> showVarAsAgda (i + 18) -- to get 'a' for var index 0...
-  CTCons tc targs ->
-    if null targs
-     then showTCon tc
-     else inBrackets $ unwords (showTCon tc : map (showTypeAsAgda True) targs)
+  CTCons tc   -> showTCon tc
+  CTApply _ _ ->
+    maybe (error $ "ToAgda.showTypeAsAgda: cannot translate complex type:\n" ++
+                   show texp)
+          (\tc -> inBrackets $ unwords $
+                   showTCon tc : map (showTypeAsAgda True) (targsOfApply texp))
+          (tconOfApply texp)
  where
   inBrackets s = if withbrackets then "(" ++ s ++ ")" else s
+
+  tconOfApply te = case te of CTApply (CTCons qn) _ -> Just qn
+                              CTApply tc _          -> tconOfApply tc
+                              _                     -> Nothing
+                                 
+  targsOfApply te = case te of
+    CTApply (CTCons _) ta -> [ta]
+    CTApply tc         ta -> targsOfApply tc ++ [ta]
+    _                     -> [] -- should not occur
+
 
 showTCon :: QName -> String
 showTCon tc

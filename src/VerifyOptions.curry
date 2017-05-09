@@ -2,7 +2,7 @@
 --- The options of the Curry->Verifier translation tool.
 ---
 --- @author Michael Hanus
---- @version August 2016
+--- @version October 2016
 -------------------------------------------------------------------------
 
 module VerifyOptions where
