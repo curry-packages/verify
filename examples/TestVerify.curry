@@ -1,9 +1,10 @@
 -- CurryCheck test for the curry-verify tool
 
-import Directory ( doesFileExist )
-import FilePath  ( (</>) )
-import List      ( splitOn )
-import System    ( getEnviron, system )
+import Directory    ( doesFileExist )
+import Distribution ( installDir )
+import FilePath     ( (</>) )
+import List         ( splitOn )
+import System       ( getEnviron, system )
 import Test.Prop
 
 import VerifyPackageConfig ( packageExecutable )
@@ -27,6 +28,7 @@ compileToAgda :: String -> String -> IO Int
 compileToAgda cvopts progname = do
   let ccmd = packageExecutable ++ " -t agda " ++ cvopts ++ " " ++ progname
   cres <- system ccmd
+  system $ installDir </> "bin" </> "cleancurry" ++ " " ++ progname
   if cres > 0
     then return cres
     else checkAgda >>=
@@ -66,7 +68,7 @@ testCompilePerm = compileToAgdaSchemes "Perm" `returns` 0
 -- At the end we clean the directory:
 cleanAfter :: PropIO
 cleanAfter =
-  system "/bin/rm -rf .curry nondet.agda* nondet-thms.agda*" `returns` 0
+  system "/bin/rm -rf nondet.agda* nondet-thms.agda*" `returns` 0
 
 --------------------------------------------------------------------------
 -- Auxiliaries:
