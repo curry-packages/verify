@@ -10,15 +10,15 @@ module ToAgda(theoremToAgda) where
 import AbstractCurry.Types
 import AbstractCurry.Select
 import AbstractCurry.Build
-import Directory
-import FilePath          ((</>))
-import List
-import Maybe (fromJust)
+import System.Directory
+import System.FilePath          ((</>))
+import Data.List
+import Data.Maybe (fromJust)
+import Data.Time
 import Rewriting.Files
 import Rewriting.Term
 import Rewriting.Rules
 import Rewriting.CriticalPairs
-import Time
 
 import PropertyUsage
 import VerifyOptions
@@ -124,7 +124,7 @@ rename4agda allnames qn@(mn,fn)
 -- Map a function declaration into the function name, comment, type, and TRS.
 funcDeclToTypedRule :: CFuncDecl -> (QName, [String], CTypeExpr, TRS QName)
 funcDeclToTypedRule (CFunc qn ar vis texp rules) =
-  funcDeclToTypedRule (CmtFunc "" qn ar vis texp rules) 
+  funcDeclToTypedRule (CmtFunc "" qn ar vis texp rules)
 funcDeclToTypedRule fdecl@(CmtFunc _ _ _ _ texp _) =
   let (fn, trs) = fromFuncDecl fdecl
    in (fn, [], typeOfQualType texp, trs)
@@ -182,7 +182,7 @@ stripRuleName (mn,fn) =
 -------------------------------------------------------------------------
 -- Transform a TRS for a function according to transformation method
 -- based on choice arguments:
--- TODO: implement partial functions 
+-- TODO: implement partial functions
 
 transformRuleWithChoices :: Options
                          -> (QName, [String], CTypeExpr, TRS QName)
@@ -374,7 +374,7 @@ transformRuleWithNondet opts (fn,cmt,texp,trs)
    then addArgsWithNdArg
           (TermCons (nondet "apply-nd") [t, addNondetInTerm arg]) args
    else addArgsWithNdArg (TermCons (nondet "apply-nd") [t,agdaVal arg]) args
-  
+
   withNdArgName i = nondet ("with-nd-arg" ++ (if i>1 then show i else ""))
 
   hasNondetSubterms (TermVar _) = False
@@ -517,7 +517,7 @@ showTypeAsAgda withbrackets texp = case texp of
   tconOfApply te = case te of CTApply (CTCons qn) _ -> Just qn
                               CTApply tc _          -> tconOfApply tc
                               _                     -> Nothing
-                                 
+
   targsOfApply te = case te of
     CTApply (CTCons _) ta -> [ta]
     CTApply tc         ta -> targsOfApply tc ++ [ta]

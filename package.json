@@ -1,15 +1,15 @@
 {
     "name": "verify",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "author": "Michael Hanus <mh@informatik.uni-kiel.de>",
     "synopsis": "A tool to support the verification of Curry programs",
     "category": [ "Verification" ],
     "dependencies": {
-        "abstract-curry": ">= 2.0.0",
-        "cass-analysis" : ">= 2.0.0",
-        "cass"          : ">= 2.0.0",
-        "currycheck"    : ">= 2.0.0",
-        "rewriting"     : ">= 2.0.0"
+        "abstract-curry": ">= 3.0.0",
+        "cass-analysis" : ">= 3.0.0",
+        "cass"          : ">= 3.0.0",
+        "currycheck"    : ">= 3.0.0",
+        "rewriting"     : ">= 3.0.0"
     },
     "compilerCompatibility": {
         "pakcs": ">= 2.0.0",

@@ -8,10 +8,10 @@
 module VerifyOptions where
 
 import AbstractCurry.Types
-import Char              (toLower)
-import GetOpt
-import List              (intercalate, last, splitOn)
-import ReadNumeric       (readNat)
+import System.Console.GetOpt
+import Data.Char             (toLower)
+import Data.List             (intercalate, last, splitOn)
+import Numeric               (readNat)
 
 import Analysis.ProgInfo
 import Analysis.Deterministic  (Deterministic(..))
@@ -89,10 +89,9 @@ options =
   ]
  where
   safeReadNat opttrans s opts =
-   let numError = error "Illegal number argument (try `-h' for help)" in
-    maybe numError
-          (\ (n,rs) -> if null rs then opttrans n opts else numError)
-          (readNat s)
+    case readNat s of
+      [(n,"")] -> opttrans n opts
+      _        -> error "Illegal number argument (try `-h' for help)"
 
   checkVerb n opts = if n>=0 && n<4
                      then opts { optVerb = n }

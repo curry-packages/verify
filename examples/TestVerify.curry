@@ -1,10 +1,11 @@
 -- CurryCheck test for the curry-verify tool
 
-import Directory    ( doesFileExist )
-import Distribution ( installDir )
-import FilePath     ( (</>) )
-import List         ( splitOn )
-import System       ( getEnviron, system )
+import System.Directory   ( doesFileExist )
+import System.FilePath    ( (</>) )
+import System.Environment ( getEnv )
+import System.Process     ( system )
+import Data.List          ( splitOn )
+import Distribution       ( installDir )
 import Test.Prop
 
 import VerifyPackageConfig ( packageExecutable )
@@ -77,7 +78,7 @@ cleanAfter =
 --- returns its file path.
 whichFileInPath :: String -> IO (Maybe String)
 whichFileInPath file = do
-  path <- getEnviron "PATH"
+  path <- getEnv "PATH"
   dirs <- return $ splitOn ":" path
   inPath dirs
  where
@@ -87,4 +88,3 @@ whichFileInPath file = do
     ex <- doesFileExist fpath
     if ex then return (Just fpath)
           else inPath ds
-

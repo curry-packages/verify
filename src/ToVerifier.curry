@@ -11,14 +11,15 @@ import AbstractCurry.Types
 import AbstractCurry.Files
 import AbstractCurry.Select
 import AbstractCurry.Transform
-import Distribution      (stripCurrySuffix)
-import GetOpt
-import List
-import Maybe             (fromJust)
-import SCC               (scc)
-import System            (exitWith, getArgs)
+import System.Console.GetOpt
+import System.Environment (getArgs)
+import System.Process     (exitWith)
+import Data.List
+import Data.Maybe         (fromJust)
+import SCC                (scc)
+import Distribution       (stripCurrySuffix)
 
-import Rewriting.Files   (showQName)
+import Rewriting.Files    (showQName)
 import PropertyUsage
 import ToAgda
 import VerifyOptions
@@ -42,7 +43,7 @@ cvBanner = unlines [bannerLine,bannerText,bannerLine]
 -- Help text
 usageText :: String
 usageText = usageInfo ("Usage: curry verify [options] <module names>\n") options
-  
+
 main :: IO ()
 main = do
   argv <- getArgs
@@ -50,7 +51,7 @@ main = do
       opts = foldl (flip id) defaultOptions funopts
   unless (null opterrors)
          (putStr (unlines opterrors) >> putStrLn usageText >> exitWith 1)
-  when (optVerb opts > 0) $ putStr cvBanner 
+  when (optVerb opts > 0) $ putStr cvBanner
   when (null args || optHelp opts) (putStrLn usageText >> exitWith 1)
   mapIO_ (generateTheoremsForModule opts) (map stripCurrySuffix args)
 
