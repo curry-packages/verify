@@ -9,7 +9,8 @@
         "cass-analysis" : ">= 3.0.0",
         "cass"          : ">= 3.0.0",
         "currycheck"    : ">= 3.0.0",
-        "rewriting"     : ">= 3.0.0"
+        "rewriting"     : ">= 3.0.0",
+        "base"          : ">= 2.0.0"
     },
     "compilerCompatibility": {
         "pakcs": ">= 2.0.0",
