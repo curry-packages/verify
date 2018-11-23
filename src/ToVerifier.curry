@@ -2,7 +2,7 @@
 --- A transformation of Curry programs into verification tools.
 ---
 --- @author Michael Hanus
---- @version October 2016
+--- @version November 2018
 -------------------------------------------------------------------------
 
 module ToVerifier where
@@ -15,7 +15,6 @@ import Distribution      (stripCurrySuffix)
 import GetOpt
 import List
 import Maybe             (fromJust)
-import SCC               (scc)
 import System            (exitWith, getArgs)
 
 import Rewriting.Files   (showQName)
@@ -28,6 +27,7 @@ import Analysis.ProgInfo
 import Analysis.Deterministic  (Deterministic(..), nondetAnalysis)
 import Analysis.TotallyDefined (Completeness(..), patCompAnalysis)
 import CASS.Server             (analyzeGeneric)
+import Data.SCC                (scc)
 
 import VerifyPackageConfig     (packageVersion)
 
