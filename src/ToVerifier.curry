@@ -2,7 +2,7 @@
 --- A transformation of Curry programs into verification tools.
 ---
 --- @author Michael Hanus
---- @version November 2018
+--- @version December 2018
 -------------------------------------------------------------------------
 
 module ToVerifier where
@@ -11,25 +11,25 @@ import AbstractCurry.Types
 import AbstractCurry.Files
 import AbstractCurry.Select
 import AbstractCurry.Transform
-import Distribution      (stripCurrySuffix)
 import GetOpt
 import List
-import Maybe             (fromJust)
-import System            (exitWith, getArgs)
+import Maybe             ( fromJust )
+import System            ( exitWith, getArgs )
 
-import Rewriting.Files   (showQName)
+import Rewriting.Files   ( showQName )
+import System.CurryPath  ( stripCurrySuffix )
 import PropertyUsage
-import ToAgda
-import VerifyOptions
 
 -- to use the determinism analysis:
 import Analysis.ProgInfo
-import Analysis.Deterministic  (Deterministic(..), nondetAnalysis)
-import Analysis.TotallyDefined (Completeness(..), patCompAnalysis)
-import CASS.Server             (analyzeGeneric)
-import Data.SCC                (scc)
+import Analysis.Deterministic  ( Deterministic(..), nondetAnalysis )
+import Analysis.TotallyDefined ( Completeness(..), patCompAnalysis )
+import CASS.Server             ( analyzeGeneric )
+import Data.SCC                ( scc )
 
-import VerifyPackageConfig     (packageVersion)
+import ToAgda
+import VerifyOptions
+import VerifyPackageConfig     ( packageVersion )
 
 -- Banner of this tool:
 cvBanner :: String
