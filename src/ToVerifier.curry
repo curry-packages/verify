@@ -87,7 +87,8 @@ generateTheorem opts qpropname = do
   let alltypenames = foldr union []
                        (map (\fd -> tconsOfType (typeOfQualType (funcType fd)))
                             allfuncs)
-  alltypes <- getAllTypeDecls opts allprogs alltypenames []
+      noproptypenames = filter ((/= propTypesModule) . fst) alltypenames
+  alltypes <- getAllTypeDecls opts allprogs noproptypenames []
   when (optVerb opts > 2) $ do
     putStrLn $ "Theorem `" ++ snd qpropname ++ "':\nInvolved operations:"
     putStrLn $ unwords (map (showQName . funcName) allfuncs)
