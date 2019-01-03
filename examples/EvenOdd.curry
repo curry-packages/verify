@@ -1,6 +1,6 @@
 -- Mutual recursive definition of even:
 
-import Nat
+import Data.Nat
 import Test.Prop
 
 double x = add x x

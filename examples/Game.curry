@@ -1,4 +1,4 @@
-import Nat
+import Data.Nat
 import Test.Prop
 
 data Move = L | R
