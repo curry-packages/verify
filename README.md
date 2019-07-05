@@ -12,7 +12,7 @@ may be supported in future releases).
 
 The tool can be directly installed by the command
 
-    > cpm installbin verify
+    > cypm install verify
 
 This installs the executable `curry-verify` in the bin directory of CPM.
 
