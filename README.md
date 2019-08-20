@@ -6,6 +6,15 @@ with the help of other theorem provers or proof assistants.
 Currently, only Agda is supported as
 a target language for verification (but more target languages
 may be supported in future releases).
+The ideas implemented by this tool are described
+in [this paper](http://dx.doi.org/10.4204/EPTCS.234.13):
+
+S. Antoy, M. Hanus, and S. Libby:
+_Proving non-deterministic computations in Agda_.
+In Proc. of the 24th International Workshop on Functional and
+(Constraint) Logic Programming (WFLP 2016),
+volume 234 of Electronic Proceedings in Theoretical Computer Science,
+pages 180--195. Open Publishing Association, 2017.
 
 
 ## Installing the tool
