@@ -41,7 +41,7 @@ cvBanner = unlines [bannerLine,bannerText,bannerLine]
 
 -- Help text
 usageText :: String
-usageText = usageInfo ("Usage: curry verify [options] <module names>\n") options
+usageText = usageInfo ("Usage: curry-verify [options] <module names>\n") options
   
 main :: IO ()
 main = do
