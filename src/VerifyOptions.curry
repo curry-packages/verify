@@ -2,20 +2,20 @@
 --- The options of the Curry->Verifier translation tool.
 ---
 --- @author Michael Hanus
---- @version October 2016
+--- @version April 2021
 -------------------------------------------------------------------------
 
 module VerifyOptions where
 
 import AbstractCurry.Types
-import Char              (toLower)
-import GetOpt
-import List              (intercalate, last, splitOn)
-import ReadNumeric       (readNat)
+import Data.Char               ( toLower )
+import Data.List               ( intercalate, last, splitOn )
+import Numeric                 ( readNat )
+import System.Console.GetOpt
 
 import Analysis.ProgInfo
-import Analysis.Deterministic  (Deterministic(..))
-import Analysis.TotallyDefined (Completeness(..))
+import Analysis.Deterministic  ( Deterministic(..) )
+import Analysis.TotallyDefined ( Completeness(..) )
 
 -------------------------------------------------------------------------
 -- Representation of command line options and information relevant
@@ -88,11 +88,9 @@ options =
            "translation scheme:\nfor target Agda: 'choice' (default) or 'nondet'"
   ]
  where
-  safeReadNat opttrans s opts =
-   let numError = error "Illegal number argument (try `-h' for help)" in
-    maybe numError
-          (\ (n,rs) -> if null rs then opttrans n opts else numError)
-          (readNat s)
+  safeReadNat opttrans s opts = case readNat s of
+    [(n,"")] -> opttrans n opts
+    _        -> error "Illegal number argument (try `-h' for help)"
 
   checkVerb n opts = if n>=0 && n<4
                      then opts { optVerb = n }

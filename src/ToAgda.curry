@@ -2,32 +2,34 @@
 --- A transformation of Curry programs into Agda programs.
 ---
 --- @author Michael Hanus
---- @version October 2016
+--- @version April 2021
 -------------------------------------------------------------------------
 
-module ToAgda(theoremToAgda) where
+module ToAgda ( theoremToAgda ) where
+
+import Control.Monad           ( unless, when )
+import Data.List
+import Data.Maybe              ( fromJust )
 
 import AbstractCurry.Types
 import AbstractCurry.Select
 import AbstractCurry.Build
-import Directory
-import FilePath          ((</>))
-import List
-import Maybe (fromJust)
+import Data.Time
 import Rewriting.Files
 import Rewriting.Term
 import Rewriting.Rules
 import Rewriting.CriticalPairs
-import Time
+import System.Directory
+import System.FilePath         ( (</>) )
 
 import PropertyUsage
 import VerifyOptions
-import VerifyPackageConfig ( packagePath )
+import VerifyPackageConfig     ( packagePath )
 
 -- to access the determinism analysis:
-import Analysis.ProgInfo       (ProgInfo, lookupProgInfo)
-import Analysis.Deterministic  (Deterministic(..))
-import Analysis.TotallyDefined (Completeness(..))
+import Analysis.ProgInfo       ( ProgInfo, lookupProgInfo )
+import Analysis.Deterministic  ( Deterministic(..) )
+import Analysis.TotallyDefined ( Completeness(..) )
 
 -------------------------------------------------------------------------
 
@@ -57,7 +59,7 @@ theoremToAgda opts qtheo@(_,theoname) allfuncs alltypes = do
   when (optStore opts) $ do
     writeFile agdafile agdaprog
     when (optScheme opts == "nondet") $
-      mapIO_ copyImport ["nondet.agda","nondet-thms.agda"]
+      mapM_ copyImport ["nondet.agda","nondet-thms.agda"]
     when (optVerb opts > 0) $ putStrLn $
      "Agda module '" ++ agdafile ++ "' written.\n" ++
      "If you completed the proof, rename it to 'PROOF-" ++ theoname ++ ".agda'."
@@ -481,10 +483,10 @@ typeDeclAsAgda (CType tc _ tvars constrs _) = unlines $
      map (\tv -> "("++ showTypeAsAgda False (CTVar tv) ++ " : Set)") tvars ++
      [": Set where"]) : map typeConsDeclAsAgda constrs
  where
-  typeConsDeclAsAgda (CCons _ _ qc _ texps) =
+  typeConsDeclAsAgda (CCons qc _ texps) =
     "   " ++ snd qc ++ " : " ++
     showTypeAsAgda False (foldr CFuncType (applyTC tc (map CTVar tvars)) texps)
-  typeConsDeclAsAgda (CRecord _ _ qc _ _) =
+  typeConsDeclAsAgda (CRecord qc _ _) =
     error $ "Records not yet supported: " ++ showQName qc
 
 -------------------------------------------------------------------------

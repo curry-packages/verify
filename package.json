@@ -1,21 +1,23 @@
 {
     "name": "verify",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "author": "Michael Hanus <mh@informatik.uni-kiel.de>",
     "synopsis": "A tool to support the verification of Curry programs",
     "category": [ "Verification" ],
+    "license": "BSD-3-Clause",
+    "licenseFile": "LICENSE",
     "dependencies": {
-        "abstract-curry": ">= 2.0.0",
-        "cass-analysis" : ">= 2.0.0",
-        "cass"          : ">= 2.0.0",
-        "currycheck"    : ">= 2.0.0",
+        "abstract-curry": ">= 3.0.0, < 4.0.0",
+        "cass-analysis" : ">= 3.0.0, < 4.0.0",
+        "cass"          : ">= 3.0.0, < 4.0.0",
+        "currycheck"    : ">= 3.0.0, < 4.0.0",
+        "currypath"     : ">= 3.0.0, < 4.0.0",
+        "filepath"      : ">= 3.0.0, < 4.0.0",
         "peano"         : ">= 1.0.0",
-        "rewriting"     : ">= 2.0.0",
-        "scc"           : ">= 0.0.1"
-    },
-    "compilerCompatibility": {
-        "pakcs": ">= 2.0.0, < 3.0.0",
-        "kics2": ">= 2.0.0, < 3.0.0"
+        "process"       : ">= 3.0.0, < 4.0.0",
+        "rewriting"     : ">= 3.0.0, < 4.0.0",
+        "scc"           : ">= 3.0.0, < 4.0.0",
+        "time"          : ">= 3.0.0, < 4.0.0"
     },
     "exportedModules": [ "ToVerifier", "VerifyOptions", "ToAgda" ],
     "configModule": "VerifyPackageConfig",

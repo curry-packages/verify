@@ -2,22 +2,25 @@
 --- A transformation of Curry programs into verification tools.
 ---
 --- @author Michael Hanus
---- @version January 2019
+--- @version April 2021
 -------------------------------------------------------------------------
 
 module ToVerifier where
+
+import Control.Monad           ( unless, when )
+import Data.List
+import Data.Maybe              ( fromJust )
+import System.Console.GetOpt
+import System.Environment      ( getArgs )
 
 import AbstractCurry.Types
 import AbstractCurry.Files
 import AbstractCurry.Select
 import AbstractCurry.Transform
-import GetOpt
-import List
-import Maybe             ( fromJust )
-import System            ( exitWith, getArgs )
 
-import Rewriting.Files   ( showQName )
-import System.CurryPath  ( stripCurrySuffix )
+import Rewriting.Files         ( showQName )
+import System.CurryPath        ( stripCurrySuffix )
+import System.Process          ( exitWith )
 import PropertyUsage
 
 -- to use the determinism analysis:
@@ -52,7 +55,7 @@ main = do
          (putStr (unlines opterrors) >> putStrLn usageText >> exitWith 1)
   when (optVerb opts > 0) $ putStr cvBanner 
   when (null args || optHelp opts) (putStrLn usageText >> exitWith 1)
-  mapIO_ (generateTheoremsForModule opts) (map stripCurrySuffix args)
+  mapM_ (generateTheoremsForModule opts) (map stripCurrySuffix args)
 
 -------------------------------------------------------------------------
 
@@ -78,7 +81,7 @@ generateTheoremsForModule opts mname = do
 
 -- Generate a proof file for each theorem in option `optTheorems`.
 generateTheorems :: Options -> IO ()
-generateTheorems opts = mapIO_ (generateTheorem opts) (optTheorems opts)
+generateTheorems opts = mapM_ (generateTheorem opts) (optTheorems opts)
 
 -- Generate a proof file for a given property name.
 generateTheorem :: Options -> QName -> IO ()
