@@ -9,8 +9,15 @@ import Test.Prop
 
 import VerifyPackageConfig ( packageExecutable )
 
+--------------------------------------------------------------------------
+-- Definition specific for the Agda system.
+
 checkAgda :: IO (Maybe String)
-checkAgda = whichFileInPath "agda"
+-- due to dependencies to a specific Agda version, we remove the testing
+-- of generated Agda programs. If Agda works in the local environment,
+-- delete the next line and uncomment the line below.
+checkAgda = return Nothing
+--checkAgda = whichFileInPath "agda"
 
 agdaImports :: String
 agdaImports = "-i . -i /net/medoc/home/mh/home/languages_systems/agda/ial -i /usr/share/agda-stdlib"
@@ -18,6 +25,7 @@ agdaImports = "-i . -i /net/medoc/home/mh/home/languages_systems/agda/ial -i /us
 agdaOptions :: String
 agdaOptions = "--allow-unsolved-metas"
 
+--------------------------------------------------------------------------
 
 -- First we clean the directory from possible old files:
 cleanBefore :: PropIO
