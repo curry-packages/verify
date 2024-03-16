@@ -32,7 +32,7 @@
         "modules": [ "TestVerify" ]
     },
     "source": {
-        "git": "https://git.ps.informatik.uni-kiel.de/curry-packages/verify.git",
+        "git": "https://github.com/curry-packages/verify.git",
         "tag": "$version"
     }
 }
