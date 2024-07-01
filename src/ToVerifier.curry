@@ -2,7 +2,7 @@
 --- A transformation of Curry programs into verification tools.
 ---
 --- @author Michael Hanus
---- @version April 2021
+--- @version July 2024
 -------------------------------------------------------------------------
 
 module ToVerifier where
@@ -39,7 +39,7 @@ cvBanner :: String
 cvBanner = unlines [bannerLine,bannerText,bannerLine]
  where
    bannerText = "curry-verify: Curry programs -> Verifiers (Version " ++
-                packageVersion ++ " of 02/01/2019)"
+                packageVersion ++ " of 02/07/2024)"
    bannerLine = take (length bannerText) (repeat '-')
 
 -- Help text
